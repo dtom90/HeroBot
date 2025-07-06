@@ -1,6 +1,7 @@
 import { View, Text, ScrollView } from 'react-native';
 import { useConversationStore } from '../store/store';
 import { useRef, useEffect } from 'react';
+import { Message } from './Message';
 
 export const Conversation = () => {
   const { messages, isLoading } = useConversationStore();
@@ -15,9 +16,7 @@ export const Conversation = () => {
   return (
     <ScrollView ref={scrollViewRef} className="flex-1">
       {messages.map((message, index) => (
-        <View key={index} className="flex-row mb-4 bg-gray-300 p-4 rounded-lg">
-          <Text>{message.text}</Text>
-        </View>
+        <Message key={index} message={message} />
       ))}
       {isLoading && (
         <View className="flex-row mb-4 bg-gray-300 p-4 rounded-lg">
