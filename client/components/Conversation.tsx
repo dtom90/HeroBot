@@ -3,7 +3,7 @@ import { useConversationStore } from '../store/store';
 import { useRef, useEffect } from 'react';
 
 export const Conversation = () => {
-  const { messages } = useConversationStore();
+  const { messages, isLoading } = useConversationStore();
   const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
@@ -19,6 +19,11 @@ export const Conversation = () => {
           <Text>{message}</Text>
         </View>
       ))}
+      {isLoading && (
+        <View className="flex-row mb-4 bg-gray-300 p-4 rounded-lg">
+          <Text>Loading...</Text>
+        </View>
+      )}
     </ScrollView>
   );
 };

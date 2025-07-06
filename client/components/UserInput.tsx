@@ -1,4 +1,4 @@
-import { View, TextInput, NativeSyntheticEvent, TextInputKeyPressEventData, TouchableOpacity } from 'react-native';
+import { View, TextInput, NativeSyntheticEvent, TextInputKeyPressEventData, TouchableOpacity, Text } from 'react-native';
 import { useState, useRef } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useMutation } from '@tanstack/react-query';
@@ -11,10 +11,15 @@ const HTTP_URL = IS_PROD ? '/api' : `http://${HOSTNAME}`;
 const WEBSOCKET_URL = IS_PROD ? '/api' : `ws://${HOSTNAME}`;
 
 export const UserInput = () => {
-  const { addMessage } = useConversationStore();
+  const { addMessage, setIsLoading } = useConversationStore();
+  const [text, setText] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
-  const { mutate: sendMessage, isPending } = useMutation({
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const webSocketRef = useRef<WebSocket | null>(null);
+  const { mutate: sendMessage, isPending, isError, error } = useMutation({
     mutationFn: async (message: string) => {
+      setIsLoading(true);
       const response = await fetch(`${HTTP_URL}/message`, {
         method: 'POST',
         headers: {
@@ -22,6 +27,8 @@ export const UserInput = () => {
         },
         body: JSON.stringify({ message }),
       });
+      addMessage(message);
+      setText('');
       return response.json();
     },
     onSuccess: async (data) => {
@@ -47,18 +54,15 @@ export const UserInput = () => {
         }
       }
     },
+    onSettled: () => {
+      setIsLoading(false);
+    },
   });
-  const [text, setText] = useState('');
-  const [isRecording, setIsRecording] = useState(false);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const webSocketRef = useRef<WebSocket | null>(null);
 
   const handleSubmit = (transcription: string) => {
     console.log('handleSubmit', transcription);
     if (transcription.trim()) {
-      addMessage(transcription);
       sendMessage(transcription);
-      setText(''); // Clear the input after submission
     }
   };
 
@@ -179,6 +183,12 @@ export const UserInput = () => {
 
   return (
     <View>
+      {isError && (
+        <View className="m-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative flex-row" role="alert">
+          <Text className="font-bold text-red-700">Error: </Text>
+          <Text className="block sm:inline text-red-700">{error?.message || 'Something went wrong.'}</Text>
+        </View>
+      )}
       <View className="relative">
         <TextInput
           multiline
