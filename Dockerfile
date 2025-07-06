@@ -27,7 +27,6 @@ COPY --from=client-builder /app/client/dist /usr/share/nginx/html
 # Copy API files
 COPY --from=api-builder /app/api/dist ./api
 COPY --from=api-builder /app/api/package*.json ./api/
-COPY ./api/google-application-credentials.json ./api/google-application-credentials.json
 
 # Install API dependencies
 WORKDIR /app/api
