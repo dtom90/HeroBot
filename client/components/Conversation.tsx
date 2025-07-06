@@ -16,7 +16,7 @@ export const Conversation = () => {
     <ScrollView ref={scrollViewRef} className="flex-1">
       {messages.map((message, index) => (
         <View key={index} className="flex-row mb-4 bg-gray-300 p-4 rounded-lg">
-          <Text>{message}</Text>
+          <Text>{message.text}</Text>
         </View>
       ))}
       {isLoading && (

@@ -6,6 +6,7 @@ import { SpeechClient } from '@google-cloud/speech';
 import { TextToSpeechClient } from '@google-cloud/text-to-speech';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
+import { Message } from '../../shared/types';
 
 dotenv.config();
 
@@ -37,19 +38,15 @@ app.get('/health', (_req: Request, res: Response) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-interface MessageRequest {
-  message: string;
-}
-
 // Message endpoint
-app.post('/message', async (req: Request<{}, {}, MessageRequest>, res: Response) => {
-  const { message } = req.body;
-  console.log(`Message received: ${message}`);
-  const response = await model.generateContent(message);
-  const responseText = response.response.text();
-  console.log(`Response: ${responseText}`);
+app.post('/message', async (req: Request<{}, {}, Message>, res: Response) => {
 
   try {
+    console.log(`Message received: ${JSON.stringify(req.body)}`);
+    const response = await model.generateContent(req.body.text);
+    const responseText = response.response.text();
+    console.log(`Hero Response: ${responseText}`);
+
     // Convert text to speech
     const [ttsResponse] = await ttsClient.synthesizeSpeech({
       input: { text: responseText },
@@ -58,13 +55,13 @@ app.post('/message', async (req: Request<{}, {}, MessageRequest>, res: Response)
     });
 
     // Convert audio content to base64
-    // const audioContent = ttsResponse.audioContent?.toString('base64');
     const audioContent = ttsResponse.audioContent ? Buffer.from(ttsResponse.audioContent).toString('base64') : null;
 
-    res.json({ 
-      message: responseText,
+    res.json({
+      type: 'hero',
+      text: responseText,
       audio: audioContent
-    });
+    } as Message);
   } catch (error) {
     console.error('Error in text-to-speech conversion:', error);
     res.status(500).json({ error: 'Failed to convert text to speech' });

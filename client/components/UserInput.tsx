@@ -4,6 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useMutation } from '@tanstack/react-query';
 import { useConversationStore } from '../store/store';
 import { Audio } from 'expo-av';
+import { Message } from '../../shared/types';
 
 const IS_PROD = process.env.EXPO_PUBLIC_ENV === 'production';
 const HOSTNAME = IS_PROD ? '/api' : 'localhost:3000';
@@ -18,22 +19,22 @@ export const UserInput = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const webSocketRef = useRef<WebSocket | null>(null);
   const { mutate: sendMessage, isPending, isError, error } = useMutation({
-    mutationFn: async (message: string) => {
+    mutationFn: async (userMessage: Message) => {
       setIsLoading(true);
       const response = await fetch(`${HTTP_URL}/message`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify(userMessage),
       });
-      addMessage(message);
+      addMessage(userMessage);
       setText('');
       return response.json();
     },
-    onSuccess: async (data) => {
+    onSuccess: async (data: Message) => {
       console.log(data);
-      addMessage(data.message);
+      addMessage(data);
       
       // Play audio if available
       if (data.audio) {
@@ -62,7 +63,7 @@ export const UserInput = () => {
   const handleSubmit = (transcription: string) => {
     console.log('handleSubmit', transcription);
     if (transcription.trim()) {
-      sendMessage(transcription);
+      sendMessage({ type: 'user', text: transcription } as Message);
     }
   };
 
