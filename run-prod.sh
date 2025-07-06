@@ -6,5 +6,5 @@ docker run \
 -d \
 --rm \
 --name herobot \
--p 9001:80 \
+-p 9001:8080 \
 herobot
