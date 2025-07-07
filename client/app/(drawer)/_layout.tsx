@@ -1,8 +1,5 @@
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { Drawer } from 'expo-router/drawer';
-
-import { HeaderButton } from '../../components/HeaderButton';
 
 const DrawerLayout = () => {
   return (
@@ -10,25 +7,20 @@ const DrawerLayout = () => {
       <Drawer.Screen
         name="index"
         options={{
-          headerTitle: 'Hero Bot',
-          drawerLabel: 'Hero Bot',
+          headerTitle: 'Home',
+          drawerLabel: 'Home',
           drawerIcon: ({ size, color }) => (
             <Ionicons name="home-outline" size={size} color={color} />
           ),
         }}
       />
       <Drawer.Screen
-        name="(tabs)"
+        name="hero-chat"
         options={{
-          headerTitle: 'Tabs',
-          drawerLabel: 'Tabs',
+          headerTitle: 'Hero Chat',
+          drawerLabel: 'Hero Chat',
           drawerIcon: ({ size, color }) => (
-            <MaterialIcons name="border-bottom" size={size} color={color} />
-          ),
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <HeaderButton />
-            </Link>
+            <Ionicons name="chatbubbles-outline" size={size} color={color} />
           ),
         }}
       />

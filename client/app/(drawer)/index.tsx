@@ -1,14 +1,14 @@
 import { Stack } from 'expo-router';
+import { Text } from 'react-native';
 
-import { ChatConent } from '~/components/ChatConent';
 import { Container } from '~/components/Container';
 
 export default function Home() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Hero Bot' }} />
+      <Stack.Screen options={{ title: 'Home' }} />
       <Container>
-        <ChatConent />
+        <Text>Home</Text>
       </Container>
     </>
   );
