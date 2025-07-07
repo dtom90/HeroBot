@@ -1,5 +1,6 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
-import { Text, View } from 'react-native';
+import { Stack, useLocalSearchParams, Link } from 'expo-router';
+import { Text, View, Pressable } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 import { Container } from '~/components/Container';
 import { VALID_HEROES, HERO_CONFIGS, isValidHero, type ValidHero } from '~/utils/heroNavigation';
@@ -11,7 +12,20 @@ export default function HeroChat() {
   if (!hero || !isValidHero(hero)) {
     return (
       <>
-        <Stack.Screen options={{ title: 'Invalid Hero' }} />
+        <Stack.Screen 
+          options={{ 
+            title: 'Invalid Hero',
+            headerLeft: () => (
+              <Link href="/(drawer)/" asChild>
+                <Pressable className="ml-4">
+                  <Ionicons name="home-outline" size={24} color="#007AFF" />
+                </Pressable>
+              </Link>
+            ),
+            headerRight: null,
+            headerTitleAlign: 'center',
+          }} 
+        />
         <Container>
           <View className="flex-1 justify-center items-center">
             <Text className="text-lg font-semibold mb-2">Invalid Hero</Text>
@@ -28,7 +42,20 @@ export default function HeroChat() {
 
   return (
     <>
-      <Stack.Screen options={{ title: heroConfig.name }} />
+      <Stack.Screen 
+        options={{ 
+          title: heroConfig.name,
+          headerLeft: () => (
+            <Link href="/(drawer)/" asChild>
+              <Pressable className="ml-4">
+                <Ionicons name="home-outline" size={24} color="#007AFF" />
+              </Pressable>
+            </Link>
+          ),
+          headerRight: null,
+          headerTitleAlign: 'center',
+        }} 
+      />
       <Container>
         <View className="flex-1 p-4">
           <View className="bg-white rounded-lg p-6 shadow-sm">
