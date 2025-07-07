@@ -1,5 +1,4 @@
-import { Stack, Link } from 'expo-router';
-import { Pressable, Text } from 'react-native';
+import { Stack } from 'expo-router';
 
 interface HeaderProps {
   title: string;
@@ -10,14 +9,7 @@ export function Header({ title }: HeaderProps) {
     <Stack.Screen 
       options={{ 
         title,
-        headerLeft: () => (
-          <Link href="/" asChild>
-            <Pressable className="ml-4">
-              <Text className="text-xl">Heroes</Text>
-            </Pressable>
-          </Link>
-        ),
-        headerTitleAlign: 'center',
+        headerTitleAlign: 'center'
       }} 
     />
   );

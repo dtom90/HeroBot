@@ -18,18 +18,13 @@ export default function RootLayout() {
           <Stack.Screen 
             name="index" 
             options={{ 
-              title: 'Home',
-              headerShown: true 
+              title: 'Hero Chat',
+              headerTitleAlign: 'center',
+              headerLeft: () => null
             }} 
           />
           <Stack.Screen 
             name="[hero]" 
-            options={{ 
-              headerShown: true 
-            }} 
-          />
-          <Stack.Screen 
-            name="hero-chat" 
             options={{ 
               headerShown: true 
             }} 

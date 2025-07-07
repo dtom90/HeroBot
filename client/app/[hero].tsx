@@ -1,28 +1,22 @@
-import { Link, useLocalSearchParams } from 'expo-router';
+import { Link, Stack, useLocalSearchParams } from 'expo-router';
 import { Text, View } from 'react-native';
 
 import { Container } from '~/components/Container';
-import { Header } from '~/components/Header';
-import { HERO_INFORMATION, isValidHero, ValidHero } from '../../shared/types';
-import { HeroChat } from '~/components/HeroChat';
-import { useConversationStore } from '~/lib/store';
-import { useEffect } from 'react';
+import { isValidHero, ValidHero } from '../../shared/types';
+import HeroPage from '~/components/HeroPage';
 
-export default function HeroPage() {
+export default function HeroPageRoute() {
   const { hero } = useLocalSearchParams<{ hero: string }>();
-  const setCurrentHero = useConversationStore((state) => state.setCurrentHero);
-  
-  useEffect(() => {
-    if (hero) {
-      setCurrentHero(hero as ValidHero);
-    }
-  }, [hero, setCurrentHero]);
 
   // Validate the hero parameter
   if (!hero || !isValidHero(hero)) {
     return (
       <>
-        <Header title="Invalid Hero" />
+        <Stack.Screen options={{
+          title: 'Invalid Hero',
+          headerTitleAlign: 'center',
+          headerLeft: () => null
+        }} />
         <Container>
           <View className="flex-1 justify-center items-center">
             <Text className="text-lg font-semibold mb-2">Invalid Hero</Text>
@@ -35,12 +29,5 @@ export default function HeroPage() {
     );
   }
 
-  return (
-    <>
-      <Header title={HERO_INFORMATION[hero].name} />
-      <Container>
-        <HeroChat hero={hero} />
-      </Container>
-    </>
-  );
+  return <HeroPage hero={hero as ValidHero} />;
 }
