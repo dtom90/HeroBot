@@ -2,7 +2,7 @@ import { View, TextInput, NativeSyntheticEvent, TextInputKeyPressEventData, Touc
 import { useState, useRef } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useMutation } from '@tanstack/react-query';
-import { useConversationStore } from '../store/store';
+import { useConversationStore } from '../lib/store';
 import { Audio } from 'expo-av';
 import { Message } from '../../shared/types';
 

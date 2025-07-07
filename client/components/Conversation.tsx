@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from 'react-native';
-import { useConversationStore } from '../store/store';
+import { useConversationStore } from '../lib/store';
 import { useRef, useEffect } from 'react';
 import { Message } from './Message';
 
