@@ -4,7 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useConversationStore } from '../lib/store';
 import { Audio } from 'expo-av';
-import { Message } from '../../shared/types';
+import { HERO_INFORMATION, Message } from '../../shared/types';
 import { transcriptionStreamQuery, streamingMessageQuery, queryClient } from '../lib/queryClient';
 
 export const UserInput = () => {
@@ -195,12 +195,12 @@ export const UserInput = () => {
         <TextInput
           multiline
           numberOfLines={4}
-          className="border border-gray-300 rounded-lg p-4 m-4 min-h-[100px] bg-white pr-12"
+          className="border border-gray-300 rounded-lg p-4 min-h-[100px] bg-white pr-12"
           value={text}
           onChangeText={setText}
           onKeyPress={handleKeyPress}
           returnKeyType="send"
-          placeholder={isRecording ? 'Recording...' : 'Enter your text here...'}
+          placeholder={isRecording ? 'Recording...' : `Ask ${HERO_INFORMATION[currentHero].name} a question...`}
           editable={!isRecording}
         />
         <TouchableOpacity

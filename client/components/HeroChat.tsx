@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { UserInput } from './UserInput';
 import { Conversation } from './Conversation';
 import { HeroImage } from './HeroImage';
-import { ValidHero } from '~/lib/heroes';
+import { ValidHero } from '../../shared/types';
 
 export const HeroChat = ({ hero }: { hero: ValidHero }) => {
   return (
