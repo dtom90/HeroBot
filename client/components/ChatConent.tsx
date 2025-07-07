@@ -2,14 +2,17 @@ import { View } from 'react-native';
 
 import { UserInput } from './UserInput';
 import { Conversation } from './Conversation';
-import { AnimatedHero } from './AnimatedHero';
+import { HeroImage } from './HeroImage';
+import { ValidHero } from '~/lib/heroes';
 
-export const ChatConent = () => {
+export const ChatConent = ({ hero }: { hero: ValidHero }) => {
   return (
     <View className="flex-1">
       <View className="flex-1 w-full h-full overflow-y-auto flex flex-row">
-        <AnimatedHero />
-        <Conversation />
+        <HeroImage hero={hero} />
+        <View className="flex-1">
+          <Conversation />
+        </View>
       </View>
 
       <UserInput />

@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
 import { VideoView, useVideoPlayer } from 'expo-video';
+import { HERO_CONFIGS, ValidHero } from '~/lib/heroes';
 
-const assetId = require('~/assets/videos/TeddyRoosevelt-idle.mp4');
-
-export const AnimatedHero = () => {
-  const player = useVideoPlayer(assetId, player => {
+export const AnimatedHero = ({ hero }: { hero: ValidHero }) => {
+  const player = useVideoPlayer(HERO_CONFIGS[hero].video, player => {
     player.loop = true;
     player.muted = true;
   });

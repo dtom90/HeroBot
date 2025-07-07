@@ -1,5 +1,5 @@
 
-import { VALID_HEROES } from '~/utils/heroNavigation';
+import { VALID_HEROES } from '~/lib/heroes';
 import { HeroTile } from './HeroTile';
 
 export function HeroList() {

@@ -1,12 +1,12 @@
-import { useLocalSearchParams } from 'expo-router';
+import { Link, useLocalSearchParams } from 'expo-router';
 import { Text, View } from 'react-native';
 
 import { Container } from '~/components/Container';
 import { HeroScreenHeader } from '~/components/HeroScreenHeader';
-import { HeroTile } from '~/components/HeroTile';
-import { HERO_CONFIGS, isValidHero } from '~/utils/heroNavigation';
+import { HERO_CONFIGS, isValidHero } from '~/lib/heroes';
+import { ChatConent } from '~/components/ChatConent';
 
-export default function HeroChat() {
+export default function HeroPage() {
   const { hero } = useLocalSearchParams<{ hero: string }>();
   
   // Validate the hero parameter
@@ -18,7 +18,7 @@ export default function HeroChat() {
           <View className="flex-1 justify-center items-center">
             <Text className="text-lg font-semibold mb-2">Invalid Hero</Text>
             <Text className="text-gray-600 text-center">
-              Please select a valid hero from the home page.
+              Please select a valid hero from the <Link href="/" className="text-blue-600">Home Page</Link>.
             </Text>
           </View>
         </Container>
@@ -30,7 +30,7 @@ export default function HeroChat() {
     <>
       <HeroScreenHeader title={HERO_CONFIGS[hero].name} />
       <Container>
-        <HeroTile hero={hero} />
+        <ChatConent hero={hero} />
       </Container>
     </>
   );

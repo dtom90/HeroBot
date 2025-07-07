@@ -1,0 +1,22 @@
+import { HERO_CONFIGS, isValidHero, ValidHero } from '~/lib/heroes';
+import { AnimatedHero } from './AnimatedHero';
+import { Image, View } from 'react-native';
+
+export const HeroImage = ({ hero }: { hero: ValidHero }) => {
+  if (!isValidHero(hero)) {
+    return null;
+  }
+
+  if (HERO_CONFIGS[hero].video) {
+    return <AnimatedHero hero={hero} />;
+  } else {
+    return (
+      <View style={{ flex: 1, alignItems: 'center' }}>
+        <Image
+          source={HERO_CONFIGS[hero].image}
+          style={{ width: undefined, height: '100%', resizeMode: 'contain' }}
+        />
+      </View>
+    );
+  }
+};
