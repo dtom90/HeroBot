@@ -12,19 +12,23 @@ export function HeroTile({ hero }: HeroTileProps) {
 
   return (
     <Link href={`/${hero}`}>
-      <View className="w-full bg-white rounded-lg p-6 mb-6 shadow-sm hover:shadow-lg transition-shadow duration-300">
-        <View className="flex flex-row">
-          <View className='mr-4'>
-            <Image source={heroConfig.image} style={{ width: 100, height: 150 }} />
+      <View className="w-full h-48 bg-white rounded-lg p-4 shadow-sm hover:shadow-lg transition-shadow duration-300">
+        <View className="flex flex-row h-full">
+          <View className='mr-3 flex-shrink-0'>
+            <Image 
+              source={heroConfig.image} 
+              style={{ width: 100, height: 150 }} 
+              className="rounded"
+            />
           </View>
           <View className="flex-1">
-            <Text className="text-2xl font-bold text-gray-900 mb-2">
+            <Text className="text-xl font-bold text-gray-900 mb-1" numberOfLines={1}>
               {heroConfig.name}
             </Text>
-            <Text className="text-lg text-blue-600 font-semibold mb-4">
+            <Text className="text-base text-blue-600 font-semibold mb-2" numberOfLines={1}>
               {heroConfig.title}
             </Text>
-            <Text className="text-gray-700 leading-relaxed">
+            <Text className="text-sm text-gray-700 leading-relaxed" numberOfLines={4}>
               {heroConfig.description}
             </Text>
           </View>
