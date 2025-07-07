@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useConversationStore } from '../lib/store';
 import { Audio } from 'expo-av';
 import { Message } from '../../shared/types';
-import { sendMessageMutation, transcriptionStreamQuery } from '../lib/queryClient';
+import { sendMessageMutation, transcriptionStreamQuery, queryClient } from '../lib/queryClient';
 
 export const UserInput = () => {
   const { addMessage, setIsLoading } = useConversationStore();
@@ -32,8 +32,10 @@ export const UserInput = () => {
       setText(lastTranscription.transcription);
       if (lastTranscription.isFinal) {
         setIsRecording(false);
+        // Reset the transcription query so it can be used again
+        queryClient.removeQueries({ queryKey: ['transcription'] });
         setTimeout(() => {
-          handleSubmit();
+          handleSubmit(lastTranscription.transcription);
         }, 0);
       }
     }
@@ -77,13 +79,15 @@ export const UserInput = () => {
     },
   });
 
-  const handleSubmit = () => {
-    console.log('handleSubmit', text);
-    if (text.trim()) {
+  const handleSubmit = async (textToSubmit?: string) => {
+    const finalText = textToSubmit || text;
+    console.log('handleSubmit', finalText);
+    if (finalText.trim()) {
       setIsLoading(true);
-      addMessage({ type: 'user', text: text } as Message);
+      const userMessage = { type: 'user', text: finalText } as Message;
+      addMessage(userMessage);
       setText('');
-      sendMessage({ type: 'user', text: text } as Message);
+      sendMessage(userMessage);
     }
   };
 
@@ -97,6 +101,8 @@ export const UserInput = () => {
 
   const stopRecording = () => {
     setIsRecording(false);
+    // Reset the transcription query so it can be used again
+    queryClient.removeQueries({ queryKey: ['transcription'] });
   };
 
   const startRecording = async () => {
@@ -155,7 +161,7 @@ export const UserInput = () => {
             {text.trim() && !isRecording ? (
               // Send arrow icon
               <View className="w-3 h-3 border-t-2 border-r-2 border-white transform rotate-45 translate-x-[-1px]" />
-            ) : isRecording ? (
+            ) : isTranscribing ? (
               // Stop icon
               <MaterialIcons
                 name="stop"
