@@ -6,7 +6,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { handleMessage, handleMessageStream } from './routes/message';
+import { handleMessageStream } from './routes/message';
 import { setupSpeechToTextWebSocket } from './websocket/speechToText';
 
 const app = express();
@@ -27,9 +27,6 @@ app.get('/', (_req: Request, res: Response) => {
 app.get('/health', (_req: Request, res: Response) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
-
-// Message endpoint
-app.post('/message', handleMessage);
 
 // Streaming message endpoint
 app.post('/message/stream', handleMessageStream);

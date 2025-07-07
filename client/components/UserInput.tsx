@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { View, TextInput, NativeSyntheticEvent, TextInputKeyPressEventData, TouchableOpacity, Text } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useConversationStore } from '../lib/store';
 import { Audio } from 'expo-av';
 import { Message } from '../../shared/types';
-import { sendMessageMutation, transcriptionStreamQuery, streamingMessageQuery, queryClient } from '../lib/queryClient';
+import { transcriptionStreamQuery, streamingMessageQuery, queryClient } from '../lib/queryClient';
 
 export const UserInput = () => {
   const { addMessage, setIsLoading, upsertStreamingMessage } = useConversationStore();
@@ -34,7 +34,7 @@ export const UserInput = () => {
         // Reset the transcription query so it can be used again
         queryClient.removeQueries({ queryKey: ['transcription'] });
         setTimeout(() => {
-          handleSubmit(lastTranscription.transcription);
+          submitUserMessage(lastTranscription.transcription);
         }, 0);
       }
     }
@@ -49,29 +49,11 @@ export const UserInput = () => {
     }
   }, [transcriptionError]);
 
-  // Old mutation function - commented out in favor of streaming
-  // const { mutate: sendMessage, isPending, isError, error } = useMutation({
-  //   mutationFn: sendMessageMutation,
-  //   onSuccess: async (data: Message) => {
-  //     console.log(data);
-  //     addMessage(data);
-      
-  //     // Play audio if available
-  //     if (data.audio) {
-  //       await playAudio(data.audio);
-  //     }
-  //   },
-  //   onSettled: () => {
-  //     setIsLoading(false);
-  //   },
-  // });
-
   const [streamingMessage, setStreamingMessage] = useState<Message | null>(null);
   
   // Streaming message query
   const {
     data: streamingData,
-    isPending: isStreaming,
     error: streamingError,
   } = useQuery({
     queryKey: ['streamingMessage', streamingMessage],
@@ -90,7 +72,7 @@ export const UserInput = () => {
         upsertStreamingMessage(lastStreamingData.text || '');
       } else if (lastStreamingData.type === 'complete') {
         // Final message with audio
-        console.log('complete streamingData:', lastStreamingData.text);
+        console.log('Hero Response:', lastStreamingData.text);
         
         // Play audio if available
         if (lastStreamingData.audio) {
@@ -138,9 +120,9 @@ export const UserInput = () => {
     }
   };
 
-  const handleSubmit = async (textToSubmit?: string) => {
+  const submitUserMessage = async (textToSubmit?: string) => {
     const finalText = textToSubmit || text;
-    console.log('handleSubmit', finalText);
+    console.log('User Input:', finalText);
     if (finalText.trim()) {
       setIsLoading(true);
       const userMessage = { type: 'user', text: finalText } as Message;
@@ -154,7 +136,7 @@ export const UserInput = () => {
     // @ts-ignore-next-line
     if (e.nativeEvent.key === 'Enter' && !e.nativeEvent.shiftKey) {
       e.preventDefault();
-      handleSubmit();
+      submitUserMessage();
     }
   };
 
@@ -179,7 +161,7 @@ export const UserInput = () => {
 
   const handleButtonPress = () => {
     if (text.trim()) {
-      handleSubmit();
+      submitUserMessage();
     } else {
       handleMicPress();
     }

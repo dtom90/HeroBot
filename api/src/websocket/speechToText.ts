@@ -5,7 +5,7 @@ export const setupSpeechToTextWebSocket = (server: any) => {
   const wss = new WebSocket.Server({ server });
 
   wss.on('connection', (ws: WebSocket) => {
-    console.log('Client connected for speech-to-text');
+    console.log('Speech-to-text Client connected');
 
     const speechClient = new SpeechClient();
     const recognizeStream = speechClient
@@ -44,7 +44,7 @@ export const setupSpeechToTextWebSocket = (server: any) => {
     });
 
     ws.on('close', () => {
-      console.log('Client disconnected');
+      console.log('Speech-to-text Client disconnected');
       try {
         recognizeStream.destroy();
       } catch (error) {
