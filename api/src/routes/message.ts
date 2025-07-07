@@ -40,3 +40,62 @@ export const handleMessage = async (req: Request<{}, {}, Message>, res: Response
     res.status(500).json({ error: 'Failed to convert text to speech' });
   }
 };
+
+export const handleMessageStream = async (req: Request<{}, {}, Message>, res: Response) => {
+  try {
+    console.log(`\nStreaming message received: ${JSON.stringify(req.body)}`);
+    
+    // Set headers for streaming
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Cache-Control');
+
+    // Generate streaming response
+    const result = await model.generateContentStream(req.body.text);
+    let fullResponse = '';
+
+    for await (const chunk of result.stream) {
+      const chunkText = chunk.text();
+      fullResponse += chunkText;
+      
+      // Send each chunk as a Server-Sent Event
+      res.write(`data: ${JSON.stringify({
+        type: 'chunk',
+        text: chunkText,
+        isComplete: false
+      })}\n\n`);
+    }
+
+    console.log(`\nHero Streaming Response: ${fullResponse}`);
+
+    // Convert full response to speech
+    const [ttsResponse] = await ttsClient.synthesizeSpeech({
+      input: { text: fullResponse },
+      voice: { languageCode: 'en-US', ssmlGender: 'MALE' },
+      audioConfig: { audioEncoding: 'MP3' },
+    });
+
+    // Convert audio content to base64
+    const audioContent = ttsResponse.audioContent ? Buffer.from(ttsResponse.audioContent).toString('base64') : null;
+
+    // Send final complete message with audio
+    res.write(`data: ${JSON.stringify({
+      type: 'complete',
+      text: fullResponse,
+      audio: audioContent,
+      isComplete: true
+    })}\n\n`);
+
+    res.end();
+  } catch (error) {
+    console.error('Error in streaming text-to-speech conversion:', error);
+    res.write(`data: ${JSON.stringify({
+      type: 'error',
+      error: 'Failed to process streaming request',
+      isComplete: true
+    })}\n\n`);
+    res.end();
+  }
+};

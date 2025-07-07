@@ -28,6 +28,84 @@ export const sendMessageMutation = async (userMessage: Message) => {
   return response.json();
 };
 
+// Types for streaming message data
+export interface StreamingMessageData {
+  type: 'chunk' | 'complete' | 'error';
+  text?: string;
+  audio?: string;
+  error?: string;
+  isComplete: boolean;
+}
+
+// Streaming message function
+const streamingMessageFn = async function* (
+  context: { signal: AbortSignal; queryKey: readonly unknown[] }
+): AsyncGenerator<StreamingMessageData> {
+  const userMessage = context.queryKey[1] as Message;
+  const { signal } = context;
+  
+  const response = await fetch(`${HTTP_URL}/message/stream`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userMessage),
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const reader = response.body?.getReader();
+  if (!reader) {
+    throw new Error('No response body reader available');
+  }
+
+  const decoder = new TextDecoder();
+  let buffer = '';
+
+  try {
+    while (true) {
+      if (signal.aborted) {
+        break;
+      }
+
+      const { done, value } = await reader.read();
+      
+      if (done) {
+        break;
+      }
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || ''; // Keep incomplete line in buffer
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          try {
+            const data = JSON.parse(line.slice(6)); // Remove 'data: ' prefix
+            yield data as StreamingMessageData;
+            
+            if (data.isComplete) {
+              return;
+            }
+          } catch (e) {
+            console.error('Error parsing SSE data:', e);
+          }
+        }
+      }
+    }
+  } finally {
+    reader.releaseLock();
+  }
+};
+
+// Streaming message query
+export const streamingMessageQuery = streamedQuery({
+  queryFn: streamingMessageFn
+});
+
 // Types for transcription data
 export interface TranscriptionData {
   transcription: string;
@@ -35,7 +113,6 @@ export interface TranscriptionData {
 }
 
 const transcriptionStreamFn = async function* ({ signal }: { signal: AbortSignal }): AsyncGenerator<TranscriptionData> {
-  console.log('transcriptionStreamFn');
   
   let mediaRecorder: MediaRecorder | null = null;
   let ws: WebSocket | null = null;
@@ -76,7 +153,6 @@ const transcriptionStreamFn = async function* ({ signal }: { signal: AbortSignal
       }
 
       ws.onopen = () => {
-        console.log('WebSocket connection opened');
         if (!stream) {
           reject(new Error('No audio stream available'));
           return;
@@ -93,7 +169,6 @@ const transcriptionStreamFn = async function* ({ signal }: { signal: AbortSignal
         };
 
         mediaRecorder.onstop = () => {
-          console.log('MediaRecorder stopped');
           cleanup();
         };
 

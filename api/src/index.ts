@@ -6,7 +6,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { handleMessage } from './routes/message';
+import { handleMessage, handleMessageStream } from './routes/message';
 import { setupSpeechToTextWebSocket } from './websocket/speechToText';
 
 const app = express();
@@ -30,6 +30,9 @@ app.get('/health', (_req: Request, res: Response) => {
 
 // Message endpoint
 app.post('/message', handleMessage);
+
+// Streaming message endpoint
+app.post('/message/stream', handleMessageStream);
 
 // Error handling middleware
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
