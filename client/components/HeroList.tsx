@@ -7,7 +7,7 @@ export function HeroList() {
   return (
     <>
       {VALID_HEROES.map((hero) => (
-        <Link key={hero} href={`/(drawer)/${hero}`}>
+        <Link key={hero} href={`/${hero}`}>
           <Text>{HERO_CONFIGS[hero].name}</Text>
         </Link>
       ))}

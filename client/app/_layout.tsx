@@ -7,7 +7,7 @@ import { queryClient } from '../lib/queryClient';
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(drawer)',
+  initialRouteName: 'index',
 };
 
 export default function RootLayout() {
@@ -15,7 +15,25 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Stack>
-          <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+          <Stack.Screen 
+            name="index" 
+            options={{ 
+              title: 'Home',
+              headerShown: true 
+            }} 
+          />
+          <Stack.Screen 
+            name="[hero]" 
+            options={{ 
+              headerShown: true 
+            }} 
+          />
+          <Stack.Screen 
+            name="hero-chat" 
+            options={{ 
+              headerShown: true 
+            }} 
+          />
         </Stack>
       </GestureHandlerRootView>
     </QueryClientProvider>

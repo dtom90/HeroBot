@@ -16,7 +16,7 @@ export default function HeroChat() {
           options={{ 
             title: 'Invalid Hero',
             headerLeft: () => (
-              <Link href="/(drawer)/" asChild>
+              <Link href="/" asChild>
                 <Pressable className="ml-4">
                   <Ionicons name="home-outline" size={24} color="#007AFF" />
                 </Pressable>
@@ -30,7 +30,7 @@ export default function HeroChat() {
           <View className="flex-1 justify-center items-center">
             <Text className="text-lg font-semibold mb-2">Invalid Hero</Text>
             <Text className="text-gray-600 text-center">
-              Please select a valid hero from the drawer menu.
+              Please select a valid hero from the home page.
             </Text>
           </View>
         </Container>
@@ -46,7 +46,7 @@ export default function HeroChat() {
         options={{ 
           title: heroConfig.name,
           headerLeft: () => (
-            <Link href="/(drawer)/" asChild>
+            <Link href="/" asChild>
               <Pressable className="ml-4">
                 <Ionicons name="home-outline" size={24} color="#007AFF" />
               </Pressable>
