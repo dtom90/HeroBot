@@ -1,14 +1,14 @@
 import { Stack } from 'expo-router';
-import { Text } from 'react-native';
 
 import { Container } from '~/components/Container';
+import { HeroList } from '~/components/HeroList';
 
 export default function Home() {
   return (
     <>
       <Stack.Screen options={{ title: 'Home' }} />
       <Container>
-        <Text>Home</Text>
+        <HeroList />
       </Container>
     </>
   );

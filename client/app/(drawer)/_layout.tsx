@@ -1,6 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Drawer } from 'expo-router/drawer';
 
+import { VALID_HEROES, HERO_CONFIGS } from '~/utils/heroNavigation';
+
 const DrawerLayout = () => {
   return (
     <Drawer>
@@ -11,16 +13,6 @@ const DrawerLayout = () => {
           drawerLabel: 'Home',
           drawerIcon: ({ size, color }) => (
             <Ionicons name="home-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="hero-chat"
-        options={{
-          headerTitle: 'Hero Chat',
-          drawerLabel: 'Hero Chat',
-          drawerIcon: ({ size, color }) => (
-            <Ionicons name="chatbubbles-outline" size={size} color={color} />
           ),
         }}
       />
