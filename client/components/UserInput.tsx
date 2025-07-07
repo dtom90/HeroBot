@@ -161,7 +161,7 @@ export const UserInput = () => {
             {text.trim() && !isRecording ? (
               // Send arrow icon
               <View className="w-3 h-3 border-t-2 border-r-2 border-white transform rotate-45 translate-x-[-1px]" />
-            ) : isTranscribing ? (
+            ) : isRecording && isTranscribing ? (
               // Stop icon
               <MaterialIcons
                 name="stop"
