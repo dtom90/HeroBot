@@ -1,6 +1,6 @@
 import { Link } from 'expo-router';
 import { Image, Text, View } from 'react-native';
-import type { ValidHero } from '~/lib/heroes';
+import { HERO_INFORMATION, ValidHero } from '../../shared/types';
 import { HERO_CONFIGS } from '~/lib/heroes';
 
 interface HeroTileProps {
@@ -8,7 +8,7 @@ interface HeroTileProps {
 }
 
 export function HeroTile({ hero }: HeroTileProps) {
-  const heroConfig = HERO_CONFIGS[hero];
+  const heroConfig = HERO_INFORMATION[hero];
 
   return (
     <Link href={`/${hero}`}>
@@ -16,7 +16,7 @@ export function HeroTile({ hero }: HeroTileProps) {
         <View className="flex flex-row h-full">
           <View className='mr-3 flex-shrink-0'>
             <Image 
-              source={heroConfig.image} 
+              source={HERO_CONFIGS[hero].image} 
               style={{ width: 100, height: 150 }} 
               className="rounded"
             />

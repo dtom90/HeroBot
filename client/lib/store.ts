@@ -1,6 +1,5 @@
 import { create } from 'zustand';
-import { Message } from '../../shared/types';
-import { ValidHero, VALID_HEROES } from './heroes';
+import { Message, VALID_HEROES, ValidHero } from '../../shared/types';
 
 export interface ConversationState {
   // Global state

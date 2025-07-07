@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 
 import { Container } from '~/components/Container';
 import { Header } from '~/components/Header';
-import { HERO_CONFIGS, isValidHero, ValidHero } from '~/lib/heroes';
+import { HERO_INFORMATION, isValidHero, ValidHero } from '../../shared/types';
 import { HeroChat } from '~/components/HeroChat';
 import { useConversationStore } from '~/lib/store';
 import { useEffect } from 'react';
@@ -37,7 +37,7 @@ export default function HeroPage() {
 
   return (
     <>
-      <Header title={HERO_CONFIGS[hero].name} />
+      <Header title={HERO_INFORMATION[hero].name} />
       <Container>
         <HeroChat hero={hero} />
       </Container>

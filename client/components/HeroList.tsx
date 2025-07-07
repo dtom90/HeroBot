@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { VALID_HEROES } from '~/lib/heroes';
+import { VALID_HEROES } from '../../shared/types';
 import { HeroTile } from './HeroTile';
 
 export function HeroList() {

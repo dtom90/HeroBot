@@ -1,4 +1,5 @@
-import { HERO_CONFIGS, isValidHero, ValidHero } from '~/lib/heroes';
+import { isValidHero, ValidHero } from '../../shared/types';
+import { HERO_CONFIGS } from '~/lib/heroes';
 import { HeroAnimation } from './HeroAnimation';
 import { Image } from 'expo-image';
 import { View } from 'react-native';

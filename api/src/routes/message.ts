@@ -1,19 +1,19 @@
 import { Request, Response } from 'express';
 import { TextToSpeechClient } from '@google-cloud/text-to-speech';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { Message } from '../../../shared/types';
+import { HERO_INFORMATION, StreamingMessageRequest } from '../../../shared/types';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 const ttsClient = new TextToSpeechClient();
-const conversation_system_instruction = `
-You are former president Teddy Roosevelt. 
+const systemInstructionTemplate = `
+You are former president %s. 
 Your goals are to be helpful and brief in your responses. 
 Respond with four or five sentences at most, unless you are asked to respond at more length. 
 Your output will be converted to audio so don't include special characters in your answers.
 `;
-const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash', systemInstruction: conversation_system_instruction });
+const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
-export const handleMessageStream = async (req: Request<{}, {}, Message>, res: Response) => {
+export const handleMessageStream = async (req: Request<{}, {}, StreamingMessageRequest>, res: Response) => {
   try {
     console.log(`\nStreaming message received: ${JSON.stringify(req.body)}`);
     
@@ -25,7 +25,17 @@ export const handleMessageStream = async (req: Request<{}, {}, Message>, res: Re
     res.setHeader('Access-Control-Allow-Headers', 'Cache-Control');
 
     // Generate streaming response
-    const result = await model.generateContentStream(req.body.text);
+    const systemInstruction = systemInstructionTemplate.replace('%s', HERO_INFORMATION[req.body.hero].name);
+    console.log(`\nSystem Instruction: ${systemInstruction}`);
+    const result = await model.generateContentStream({
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: req.body.userMessage.text }],
+        }
+      ],
+      systemInstruction: systemInstruction,
+    });
     let fullResponse = '';
 
     for await (const chunk of result.stream) {

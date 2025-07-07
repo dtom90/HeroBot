@@ -1,5 +1,5 @@
 import { QueryClient, experimental_streamedQuery as streamedQuery } from '@tanstack/react-query';
-import { Message } from '../../shared/types';
+import { Message, StreamingMessageRequest, ValidHero } from '../../shared/types';
 
 const IS_PROD = process.env.EXPO_PUBLIC_ENV === 'production';
 const HOSTNAME = IS_PROD ? '/api' : 'localhost:3000';
@@ -17,17 +17,6 @@ export const queryClient = new QueryClient({
   },
 });
 
-export const sendMessageMutation = async (userMessage: Message) => {
-  const response = await fetch(`${HTTP_URL}/message`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userMessage),
-  });
-  return response.json();
-};
-
 // Types for streaming message data
 export interface StreamingMessageData {
   type: 'chunk' | 'complete' | 'error';
@@ -41,7 +30,9 @@ export interface StreamingMessageData {
 const streamingMessageFn = async function* (
   context: { signal: AbortSignal; queryKey: readonly unknown[] }
 ): AsyncGenerator<StreamingMessageData> {
-  const userMessage = context.queryKey[1] as Message;
+  const hero = context.queryKey[1] as ValidHero;
+  const userMessage = context.queryKey[2] as Message;
+  const body = { hero, userMessage } as StreamingMessageRequest;
   const { signal } = context;
   
   const response = await fetch(`${HTTP_URL}/message/stream`, {
@@ -49,7 +40,7 @@ const streamingMessageFn = async function* (
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(userMessage),
+    body: JSON.stringify(body),
     signal,
   });
 

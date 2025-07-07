@@ -56,7 +56,7 @@ export const UserInput = () => {
     data: streamingData,
     error: streamingError,
   } = useQuery({
-    queryKey: ['streamingMessage', streamingMessage],
+    queryKey: ['streamingMessage', currentHero, streamingMessage],
     enabled: !!streamingMessage,
     queryFn: streamingMessageQuery,
   });
