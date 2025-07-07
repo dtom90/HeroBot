@@ -6,7 +6,7 @@ set -e
 
 # Start the API server in the background
 echo "Starting Node.js API server..."
-cd /app/api && node index.js &
+cd /app/api && node dist/api/src/index.js &
 
 # Wait for the API server to be ready
 echo "Waiting for API to be ready on port 3000..."

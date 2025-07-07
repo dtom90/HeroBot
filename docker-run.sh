@@ -2,9 +2,7 @@
 set -ex
 
 docker build -t herobot . && \
-docker run \
--d \
---rm \
+docker run -it --rm \
 --name herobot \
 -p 9001:8080 \
 herobot

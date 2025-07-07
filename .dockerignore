@@ -1,5 +1,8 @@
-**/node_modules/
 .git/
+**/node_modules/
 **/.expo/
 **/dist/
 **/web-build/
+**/.DS_Store
+
+docker-run.sh

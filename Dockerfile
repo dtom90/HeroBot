@@ -3,15 +3,8 @@ FROM node:20-alpine AS client-builder
 WORKDIR /app/client
 COPY client/package*.json ./
 RUN npm ci
-COPY client/ .
-RUN npm run build
-
-# Build stage for API
-FROM node:20-alpine AS api-builder
-WORKDIR /app/api
-COPY api/package*.json ./
-RUN npm ci
-COPY api/ .
+COPY client/ ./
+COPY shared/ ../shared/
 RUN npm run build
 
 # Final stage
@@ -24,13 +17,14 @@ RUN apk add --no-cache nodejs npm
 # Copy built client assets
 COPY --from=client-builder /app/client/dist /usr/share/nginx/html
 
-# Copy API files
-COPY --from=api-builder /app/api/dist ./api
-COPY --from=api-builder /app/api/package*.json ./api/
+# Copy API source files and package.json
+COPY api/ ./api/
+COPY shared/ ./shared/
 
-# Install API dependencies
+# Install API dependencies and build
 WORKDIR /app/api
-RUN npm ci --production
+RUN npm ci
+RUN npm run build
 
 # Configure Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
