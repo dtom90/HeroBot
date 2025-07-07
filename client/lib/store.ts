@@ -1,32 +1,99 @@
 import { create } from 'zustand';
 import { Message } from '../../shared/types';
+import { ValidHero, VALID_HEROES } from './heroes';
 
 export interface ConversationState {
-  isLoading: boolean;
-  setIsLoading: (isLoading: boolean) => void;
-  messages: Message[];
-  addMessage: (message: Message) => void;
-  upsertStreamingMessage: (text: string) => void;
+  // Global state
+  currentHero: ValidHero | null;
+  setCurrentHero: (hero: ValidHero | null) => void;
+  
+  // Per-hero state
+  heroStates: Record<ValidHero, {
+    isLoading: boolean;
+    messages: Message[];
+  }>;
+  
+  // Actions
+  setIsLoading: (hero: ValidHero, isLoading: boolean) => void;
+  addMessage: (hero: ValidHero, message: Message) => void;
+  upsertStreamingMessage: (hero: ValidHero, text: string) => void;
+  clearMessages: (hero: ValidHero) => void;
 }
 
-export const useConversationStore = create<ConversationState>((set) => ({
+// Initialize hero states
+const initialHeroState = {
   isLoading: false,
-  setIsLoading: (isLoading) => set({ isLoading }),
   messages: [],
-  addMessage: (message: Message) => set((state) => ({ messages: [...state.messages, message] })),
-  upsertStreamingMessage: (text: string) => set((state) => {
-    const lastMessage = state.messages[state.messages.length - 1];
+};
+
+const initialHeroStates = VALID_HEROES.reduce((acc, hero) => {
+  acc[hero] = initialHeroState;
+  return acc;
+}, {} as Record<ValidHero, typeof initialHeroState>);
+
+export const useConversationStore = create<ConversationState>((set, get) => ({
+  currentHero: null,
+  setCurrentHero: (hero) => set({ currentHero: hero }),
+  
+  heroStates: initialHeroStates,
+  
+  setIsLoading: (hero, isLoading) => set((state) => ({
+    heroStates: {
+      ...state.heroStates,
+      [hero]: {
+        ...state.heroStates[hero],
+        isLoading,
+      },
+    },
+  })),
+  
+  addMessage: (hero, message) => set((state) => ({
+    heroStates: {
+      ...state.heroStates,
+      [hero]: {
+        ...state.heroStates[hero],
+        messages: [...state.heroStates[hero].messages, message],
+      },
+    },
+  })),
+  
+  upsertStreamingMessage: (hero, text) => set((state) => {
+    const heroState = state.heroStates[hero];
+    const lastMessage = heroState.messages[heroState.messages.length - 1];
+    
     if (lastMessage && lastMessage.type === 'hero') {
       // Update the last message if it's a hero type
-      lastMessage.text += text;
+      const updatedMessage = { ...lastMessage, text: lastMessage.text + text };
       return {
-        messages: [...state.messages.slice(0, -1), lastMessage]
+        heroStates: {
+          ...state.heroStates,
+          [hero]: {
+            ...heroState,
+            messages: [...heroState.messages.slice(0, -1), updatedMessage],
+          },
+        },
       };
     } else {
       // Add new message if last message is not hero type
       return {
-        messages: [...state.messages, { type: 'hero', text }]
+        heroStates: {
+          ...state.heroStates,
+          [hero]: {
+            ...heroState,
+            messages: [...heroState.messages, { type: 'hero', text }],
+          },
+        },
       };
     }
   }),
+  
+  clearMessages: (hero) => set((state) => ({
+    heroStates: {
+      ...state.heroStates,
+      [hero]: {
+        ...state.heroStates[hero],
+        messages: [],
+      },
+    },
+  })),
 }));

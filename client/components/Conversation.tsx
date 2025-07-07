@@ -4,7 +4,12 @@ import { useRef, useEffect } from 'react';
 import { Message } from './Message';
 
 export const Conversation = () => {
-  const { messages, isLoading } = useConversationStore();
+  const { currentHero, heroStates } = useConversationStore();
+  
+  // Get the current hero's state, or use empty state if no hero is selected
+  const currentHeroState = currentHero ? heroStates[currentHero] : { messages: [], isLoading: false };
+  const { messages, isLoading } = currentHeroState;
+  
   const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {

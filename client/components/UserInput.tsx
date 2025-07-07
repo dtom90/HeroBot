@@ -8,7 +8,7 @@ import { Message } from '../../shared/types';
 import { transcriptionStreamQuery, streamingMessageQuery, queryClient } from '../lib/queryClient';
 
 export const UserInput = () => {
-  const { addMessage, setIsLoading, upsertStreamingMessage } = useConversationStore();
+  const { currentHero, addMessage, setIsLoading, upsertStreamingMessage } = useConversationStore();
   const [text, setText] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
@@ -63,13 +63,13 @@ export const UserInput = () => {
 
   // Handle streaming updates
   useEffect(() => {
-    if (streamingData) {
+    if (streamingData && currentHero) {
       const lastStreamingData = streamingData[streamingData.length - 1];
       
       if (lastStreamingData.type === 'chunk') {
-        setIsLoading(false)
+        setIsLoading(currentHero, false);
         // Update the message with partial text
-        upsertStreamingMessage(lastStreamingData.text || '');
+        upsertStreamingMessage(currentHero, lastStreamingData.text || '');
       } else if (lastStreamingData.type === 'complete') {
         // Final message with audio
         console.log('Hero Response:', lastStreamingData.text);
@@ -79,28 +79,28 @@ export const UserInput = () => {
           playAudio(lastStreamingData.audio);
         }
         
-        setIsLoading(false);
+        setIsLoading(currentHero, false);
         setStreamingMessage(null);
         // Reset the streaming query
         queryClient.removeQueries({ queryKey: ['streamingMessage'] });
       } else if (lastStreamingData.type === 'error') {
         console.error('Streaming error:', lastStreamingData.error);
-        setIsLoading(false);
+        setIsLoading(currentHero, false);
         setStreamingMessage(null);
         queryClient.removeQueries({ queryKey: ['streamingMessage'] });
       }
     }
-  }, [streamingData]);
+  }, [streamingData, currentHero]);
 
   // Handle streaming errors
   useEffect(() => {
-    if (streamingError) {
+    if (streamingError && currentHero) {
       console.error('Streaming error:', streamingError);
-      setIsLoading(false);
+      setIsLoading(currentHero, false);
       setStreamingMessage(null);
       queryClient.cancelQueries({ queryKey: ['streamingMessage'] });
     }
-  }, [streamingError]);
+  }, [streamingError, currentHero]);
 
   const playAudio = async (audioBase64: string) => {
     try {
@@ -121,12 +121,17 @@ export const UserInput = () => {
   };
 
   const submitUserMessage = async (textToSubmit?: string) => {
+    if (!currentHero) {
+      console.warn('No hero selected');
+      return;
+    }
+
     const finalText = textToSubmit || text;
     console.log('User Input:', finalText);
     if (finalText.trim()) {
-      setIsLoading(true);
+      setIsLoading(currentHero, true);
       const userMessage = { type: 'user', text: finalText } as Message;
-      addMessage(userMessage);
+      addMessage(currentHero, userMessage);
       setText('');
       setStreamingMessage(userMessage); // Trigger streaming query
     }
@@ -166,6 +171,11 @@ export const UserInput = () => {
       handleMicPress();
     }
   };
+
+  // Don't render if no hero is selected
+  if (!currentHero) {
+    return null;
+  }
 
   return (
     <View>

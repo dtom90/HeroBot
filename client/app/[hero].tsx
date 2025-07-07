@@ -3,12 +3,21 @@ import { Text, View } from 'react-native';
 
 import { Container } from '~/components/Container';
 import { Header } from '~/components/Header';
-import { HERO_CONFIGS, isValidHero } from '~/lib/heroes';
+import { HERO_CONFIGS, isValidHero, ValidHero } from '~/lib/heroes';
 import { HeroChat } from '~/components/HeroChat';
+import { useConversationStore } from '~/lib/store';
+import { useEffect } from 'react';
 
 export default function HeroPage() {
   const { hero } = useLocalSearchParams<{ hero: string }>();
+  const setCurrentHero = useConversationStore((state) => state.setCurrentHero);
   
+  useEffect(() => {
+    if (hero) {
+      setCurrentHero(hero as ValidHero);
+    }
+  }, [hero, setCurrentHero]);
+
   // Validate the hero parameter
   if (!hero || !isValidHero(hero)) {
     return (
