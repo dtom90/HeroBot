@@ -1,12 +1,12 @@
 import { ValidHero } from '../../shared/types';
 
-export type HeroConfig = {
+type HeroAsset = {
   image: any;
   video?: any;
 };
 
-// Hero configurations
-export const HERO_CONFIGS: Record<ValidHero, HeroConfig> = {
+// Hero assets
+export const HERO_ASSETS: Record<ValidHero, HeroAsset> = {
   washington: {
     image: require('~/assets/images/washington.png'),
   },

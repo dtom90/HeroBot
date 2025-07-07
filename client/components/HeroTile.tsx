@@ -1,7 +1,7 @@
 import { Link } from 'expo-router';
 import { Image, Text, View } from 'react-native';
 import { HERO_INFORMATION, ValidHero } from '../../shared/types';
-import { HERO_CONFIGS } from '~/lib/heroes';
+import { HERO_ASSETS } from '~/lib/heroAssets';
 
 interface HeroTileProps {
   hero: ValidHero;
@@ -16,7 +16,7 @@ export function HeroTile({ hero }: HeroTileProps) {
         <View className="flex flex-row h-full">
           <View className='mr-3 flex-shrink-0'>
             <Image 
-              source={HERO_CONFIGS[hero].image} 
+              source={HERO_ASSETS[hero].image} 
               style={{ width: 100, height: 150 }} 
               className="rounded"
             />
