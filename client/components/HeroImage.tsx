@@ -1,5 +1,5 @@
 import { HERO_CONFIGS, isValidHero, ValidHero } from '~/lib/heroes';
-import { AnimatedHero } from './AnimatedHero';
+import { HeroAnimation } from './HeroAnimation';
 import { Image, View } from 'react-native';
 
 export const HeroImage = ({ hero }: { hero: ValidHero }) => {
@@ -8,7 +8,7 @@ export const HeroImage = ({ hero }: { hero: ValidHero }) => {
   }
 
   if (HERO_CONFIGS[hero].video) {
-    return <AnimatedHero hero={hero} />;
+    return <HeroAnimation hero={hero} />;
   } else {
     return (
       <View style={{ flex: 1, alignItems: 'center' }}>

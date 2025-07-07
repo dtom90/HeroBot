@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { VideoView, useVideoPlayer } from 'expo-video';
 import { HERO_CONFIGS, ValidHero } from '~/lib/heroes';
 
-export const AnimatedHero = ({ hero }: { hero: ValidHero }) => {
+export const HeroAnimation = ({ hero }: { hero: ValidHero }) => {
   const player = useVideoPlayer(HERO_CONFIGS[hero].video, player => {
     player.loop = true;
     player.muted = true;

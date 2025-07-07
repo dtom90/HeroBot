@@ -1,12 +1,11 @@
 import { Stack, Link } from 'expo-router';
 import { Pressable, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
-interface HeroScreenHeaderProps {
+interface HeaderProps {
   title: string;
 }
 
-export function HeroScreenHeader({ title }: HeroScreenHeaderProps) {
+export function Header({ title }: HeaderProps) {
   return (
     <Stack.Screen 
       options={{ 
