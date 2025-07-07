@@ -5,10 +5,10 @@ import { useMutation } from '@tanstack/react-query';
 import { useConversationStore } from '../lib/store';
 import { Audio } from 'expo-av';
 import { Message } from '../../shared/types';
+import { sendMessageMutation } from '../lib/queryClient';
 
 const IS_PROD = process.env.EXPO_PUBLIC_ENV === 'production';
 const HOSTNAME = IS_PROD ? '/api' : 'localhost:3000';
-const HTTP_URL = IS_PROD ? '/api' : `http://${HOSTNAME}`;
 const WEBSOCKET_URL = IS_PROD ? '/api' : `ws://${HOSTNAME}`;
 
 export const UserInput = () => {
@@ -19,19 +19,7 @@ export const UserInput = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const webSocketRef = useRef<WebSocket | null>(null);
   const { mutate: sendMessage, isPending, isError, error } = useMutation({
-    mutationFn: async (userMessage: Message) => {
-      setIsLoading(true);
-      const response = await fetch(`${HTTP_URL}/message`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userMessage),
-      });
-      addMessage(userMessage);
-      setText('');
-      return response.json();
-    },
+    mutationFn: sendMessageMutation,
     onSuccess: async (data: Message) => {
       console.log(data);
       addMessage(data);
@@ -63,6 +51,9 @@ export const UserInput = () => {
   const handleSubmit = (transcription: string) => {
     console.log('handleSubmit', transcription);
     if (transcription.trim()) {
+      setIsLoading(true);
+      addMessage({ type: 'user', text: transcription } as Message);
+      setText('');
       sendMessage({ type: 'user', text: transcription } as Message);
     }
   };
