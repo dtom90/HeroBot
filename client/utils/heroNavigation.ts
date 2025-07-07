@@ -39,4 +39,4 @@ export function getHeroRoute(hero: ValidHero): string {
 // Helper function to get all hero routes
 export function getAllHeroRoutes(): string[] {
   return VALID_HEROES.map(getHeroRoute);
-} 
+}

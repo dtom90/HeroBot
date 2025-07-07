@@ -1,9 +1,10 @@
-import { Stack, useLocalSearchParams, Link } from 'expo-router';
-import { Text, View, Pressable } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams } from 'expo-router';
+import { Text, View } from 'react-native';
 
 import { Container } from '~/components/Container';
-import { VALID_HEROES, HERO_CONFIGS, isValidHero, type ValidHero } from '~/utils/heroNavigation';
+import { HeroScreenHeader } from '~/components/HeroScreenHeader';
+import { HeroTile } from '~/components/HeroTile';
+import { HERO_CONFIGS, isValidHero } from '~/utils/heroNavigation';
 
 export default function HeroChat() {
   const { hero } = useLocalSearchParams<{ hero: string }>();
@@ -12,20 +13,7 @@ export default function HeroChat() {
   if (!hero || !isValidHero(hero)) {
     return (
       <>
-        <Stack.Screen 
-          options={{ 
-            title: 'Invalid Hero',
-            headerLeft: () => (
-              <Link href="/" asChild>
-                <Pressable className="ml-4">
-                  <Ionicons name="home-outline" size={24} color="#007AFF" />
-                </Pressable>
-              </Link>
-            ),
-            headerRight: null,
-            headerTitleAlign: 'center',
-          }} 
-        />
+        <HeroScreenHeader title="Invalid Hero" />
         <Container>
           <View className="flex-1 justify-center items-center">
             <Text className="text-lg font-semibold mb-2">Invalid Hero</Text>
@@ -38,39 +26,12 @@ export default function HeroChat() {
     );
   }
 
-  const heroConfig = HERO_CONFIGS[hero as ValidHero];
-
   return (
     <>
-      <Stack.Screen 
-        options={{ 
-          title: heroConfig.name,
-          headerLeft: () => (
-            <Link href="/" asChild>
-              <Pressable className="ml-4">
-                <Ionicons name="home-outline" size={24} color="#007AFF" />
-              </Pressable>
-            </Link>
-          ),
-          headerRight: null,
-          headerTitleAlign: 'center',
-        }} 
-      />
+      <HeroScreenHeader title={HERO_CONFIGS[hero].name} />
       <Container>
-        <View className="flex-1 p-4">
-          <View className="bg-white rounded-lg p-6 shadow-sm">
-            <Text className="text-2xl font-bold text-gray-900 mb-2">
-              {heroConfig.name}
-            </Text>
-            <Text className="text-lg text-blue-600 font-semibold mb-4">
-              {heroConfig.title}
-            </Text>
-            <Text className="text-gray-700 leading-relaxed">
-              {heroConfig.description}
-            </Text>
-          </View>
-        </View>
+        <HeroTile hero={hero} />
       </Container>
     </>
   );
-} 
+}
