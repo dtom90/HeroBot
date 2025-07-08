@@ -102,6 +102,10 @@ export const UserInput = ({ hero }: { hero: ValidHero }) => {
     }
   }, [streamingError, hero]);
 
+  useEffect(() => {
+    submitUserMessage('Introduce yourself in one sentence and then tell me how you can help me in one sentence', true);
+  }, []);
+
   const playAudio = async (audioBase64: string) => {
     try {
       // Stop any currently playing sound
@@ -120,7 +124,7 @@ export const UserInput = ({ hero }: { hero: ValidHero }) => {
     }
   };
 
-  const submitUserMessage = async (textToSubmit?: string) => {
+  const submitUserMessage = async (textToSubmit?: string, isInitialMessage: boolean = false) => {
     if (!hero) {
       console.warn('No hero selected');
       return;
@@ -131,7 +135,9 @@ export const UserInput = ({ hero }: { hero: ValidHero }) => {
     if (finalText.trim()) {
       setIsLoading(hero, true);
       const userMessage = { type: 'user', text: finalText } as Message;
-      addMessage(hero, userMessage);
+      if (!isInitialMessage) {
+        addMessage(hero, userMessage);
+      }
       setText('');
       setStreamingMessage(userMessage); // Trigger streaming query
     }
