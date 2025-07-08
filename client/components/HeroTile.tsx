@@ -23,13 +23,17 @@ export function HeroTile({ hero }: HeroTileProps) {
           className={`w-full h-48 bg-white rounded-lg p-4 shadow-sm transition-shadow duration-300 ${isHovering ? 'shadow-lg' : 'shadow-sm'}`}
         >
           <View className="flex flex-row h-full">
-            <View className='mr-3 flex-shrink-0'>
-              {isHovering ? <HeroAnimation hero={hero} style={{ width: 100, height: 150 }} /> : (
+            <View className='mr-3 flex-shrink-0 relative'>
               <Image 
                 source={HERO_ASSETS[hero].image} 
                 style={{ width: 100, height: 150 }} 
-                className="rounded"
-              />)}
+                className="rounded-md overflow-hidden"
+              />
+              {isHovering && (
+                <View className="absolute inset-0 z-10">
+                  <HeroAnimation hero={hero} style={{ width: 100, height: 150 }} />
+                </View>
+              )}
             </View>
             <View className="flex-1">
               <Text className="text-xl font-bold text-gray-900 mb-1" numberOfLines={1}>
