@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { Message, VALID_HEROES, ValidHero } from '../../shared/types';
 
-export interface ConversationState {
+interface ConversationState {
 
   // Per-hero state
   heroStates: Record<ValidHero, {

@@ -1,4 +1,4 @@
-import { QueryClient, experimental_streamedQuery as streamedQuery } from '@tanstack/react-query';
+import { QueryClient, experimental_streamedQuery as streamedQuery, useQuery } from '@tanstack/react-query';
 import { Message, StreamingMessageRequest, ValidHero } from '../../shared/types';
 
 const IS_PROD = process.env.EXPO_PUBLIC_ENV === 'production';
@@ -16,6 +16,22 @@ export const queryClient = new QueryClient({
     },
   },
 });
+
+export const useTranscriptionQuery = (isRecording: boolean) => {
+  return useQuery({
+    queryKey: ['transcription'],
+    enabled: isRecording, // Only run when recording
+    queryFn: transcriptionStreamQuery,
+  });
+};
+
+export const useStreamingMessageQuery = (hero: ValidHero, streamingMessage: Message | null) => {
+  return useQuery({
+    queryKey: ['streamingMessage', hero, streamingMessage],
+    enabled: !!streamingMessage,
+    queryFn: streamingMessageQuery,
+  });
+};
 
 // Types for streaming message data
 export interface StreamingMessageData {

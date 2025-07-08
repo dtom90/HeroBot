@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from 'react-native';
-import { useConversationStore } from '../lib/store';
+import { useConversationStore } from '../hooks/useConversationStore';
 import { useRef, useEffect } from 'react';
 import { Message } from './Message';
 import { ValidHero } from '../../shared/types';

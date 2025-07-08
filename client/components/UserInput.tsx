@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, NativeSyntheticEvent, TextInputKeyPressEventData, TouchableOpacity, Text } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useQuery } from '@tanstack/react-query';
-import { useConversationStore } from '../lib/store';
+import { useConversationStore } from '../hooks/useConversationStore';
 import { HERO_INFORMATION, Message, ValidHero } from '../../shared/types';
-import { transcriptionStreamQuery, streamingMessageQuery, queryClient } from '../lib/queryClient';
+import { queryClient, useTranscriptionQuery, useStreamingMessageQuery } from '../hooks/useApiClient';
 import { useFocusEffect } from '@react-navigation/native';
 import { useAudio } from '../hooks/useAudio';
 
@@ -19,11 +18,7 @@ export const UserInput = ({ hero }: { hero: ValidHero }) => {
     data: transcriptionData,
     isPending: isTranscribing,
     error: transcriptionError,
-  } = useQuery({
-    queryKey: ['transcription'],
-    enabled: isRecording, // Only run when recording
-    queryFn: transcriptionStreamQuery,
-  });
+  } = useTranscriptionQuery(isRecording);
 
   // Handle transcription updates
   useEffect(() => {
@@ -56,11 +51,7 @@ export const UserInput = ({ hero }: { hero: ValidHero }) => {
   const {
     data: streamingData,
     error: streamingError,
-  } = useQuery({
-    queryKey: ['streamingMessage', hero, streamingMessage],
-    enabled: !!streamingMessage,
-    queryFn: streamingMessageQuery,
-  });
+  } = useStreamingMessageQuery(hero, streamingMessage || null);
 
   // Handle streaming updates
   useEffect(() => {
