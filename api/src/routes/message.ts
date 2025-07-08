@@ -45,7 +45,7 @@ export const handleMessageStream = async (req: Request<{}, {}, StreamingMessageR
       // Send each chunk as a Server-Sent Event
       res.write(`data: ${JSON.stringify({
         type: 'chunk',
-        text: chunkText,
+        text: fullResponse,
         isComplete: false
       })}\n\n`);
     }

@@ -57,7 +57,7 @@ export const useConversationStore = create<ConversationState>((set, get) => ({
     
     if (lastMessage && lastMessage.type === 'hero') {
       // Update the last message if it's a hero type
-      const updatedMessage = { ...lastMessage, text: lastMessage.text + text };
+      const updatedMessage = { ...lastMessage, text: text };
       return {
         heroStates: {
           ...state.heroStates,
