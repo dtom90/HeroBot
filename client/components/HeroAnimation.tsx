@@ -13,5 +13,5 @@ export const HeroAnimation = ({ hero }: { hero: ValidHero }) => {
     player.play();
   }, [player]);
 
-  return <VideoView player={player} playsInline nativeControls={false} />;
+  return <VideoView player={player} playsInline nativeControls={false} style={{ width: '100%', height: '100%' }} />;
 };
