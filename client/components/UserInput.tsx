@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, NativeSyntheticEvent, TextInputKeyPressEventData, TouchableOpacity, Text } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
@@ -6,6 +6,7 @@ import { useConversationStore } from '../lib/store';
 import { Audio } from 'expo-av';
 import { HERO_INFORMATION, Message, ValidHero } from '../../shared/types';
 import { transcriptionStreamQuery, streamingMessageQuery, queryClient } from '../lib/queryClient';
+import { useFocusEffect } from '@react-navigation/native';
 
 export const UserInput = ({ hero }: { hero: ValidHero }) => {
   const { addMessage, setIsLoading, upsertStreamingMessage } = useConversationStore();
@@ -106,6 +107,26 @@ export const UserInput = ({ hero }: { hero: ValidHero }) => {
     submitUserMessage('Introduce yourself in one sentence and then tell me how you can help me in one sentence', true);
   }, []);
 
+  // Cleanup on navigation away
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        // Cleanup audio
+        console.log('Cleaning up audio on navigation away');
+        if (sound) {
+          sound.unloadAsync();
+        }
+        
+        // Cancel any ongoing queries
+        queryClient.cancelQueries({ queryKey: ['transcription'] });
+        queryClient.cancelQueries({ queryKey: ['streamingMessage'] });
+        
+        // Reset recording state
+        setIsRecording(false);
+      };
+    }, [sound])
+  );
+
   const playAudio = async (audioBase64: string) => {
     try {
       // Stop any currently playing sound
@@ -158,6 +179,9 @@ export const UserInput = ({ hero }: { hero: ValidHero }) => {
   };
 
   const startRecording = async () => {
+    if (sound) {
+      await sound.unloadAsync();
+    }
     setIsRecording(true);
     setText('');
   };
