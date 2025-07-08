@@ -3,7 +3,7 @@ import { View, TextInput, NativeSyntheticEvent, TextInputKeyPressEventData, Touc
 import { MaterialIcons } from '@expo/vector-icons';
 import { useConversationStore } from '../hooks/useConversationStore';
 import { HERO_INFORMATION, Message, ValidHero } from '../../shared/types';
-import { queryClient } from '../hooks/useApiClient';
+import { queryClient } from '../lib/queryClient';
 import { useTranscriptionQuery } from '../hooks/useTranscriptionQuery';
 import { useStreamingMessageQuery } from '../hooks/useStreamingMessageQuery';
 import { useFocusEffect } from '@react-navigation/native';

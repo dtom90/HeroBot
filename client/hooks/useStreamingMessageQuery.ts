@@ -1,6 +1,6 @@
 import { useQuery, experimental_streamedQuery as streamedQuery } from '@tanstack/react-query';
 import { Message, StreamingMessageRequest, ValidHero } from '../../shared/types';
-import { HTTP_URL } from "./useApiClient";
+import { HTTP_URL } from "../lib/queryClient";
 
 export const useStreamingMessageQuery = (hero: ValidHero, streamingMessage: Message | null) => {
   return useQuery({

@@ -1,5 +1,5 @@
 import { useQuery, experimental_streamedQuery as streamedQuery } from "@tanstack/react-query";
-import { WEBSOCKET_URL } from "./useApiClient";
+import { WEBSOCKET_URL } from "../lib/queryClient";
 
 export const useTranscriptionQuery = (isRecording: boolean) => {
   return useQuery({
