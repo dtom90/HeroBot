@@ -22,6 +22,12 @@ https://herochat.app/
 - Gemini 2.0 Flash (Streaming)
 - Google Text-to-Speech
 
+### Infrastructure
+
+- Docker
+- Google Cloud Build
+- Google Cloud Run
+
 ### Animations
 
 - ChatGPT
