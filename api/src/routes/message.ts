@@ -25,7 +25,8 @@ export const handleMessageStream = async (req: Request<{}, {}, StreamingMessageR
     res.setHeader('Access-Control-Allow-Headers', 'Cache-Control');
 
     // Generate streaming response
-    const systemInstruction = systemInstructionTemplate.replace('%s', HERO_INFORMATION[req.body.hero].name);
+    const hero = HERO_INFORMATION[req.body.hero];
+    const systemInstruction = systemInstructionTemplate.replace('%s', hero.name);
     console.log(`\nSystem Instruction: ${systemInstruction}`);
     const result = await model.generateContentStream({
       contents: [
@@ -50,12 +51,12 @@ export const handleMessageStream = async (req: Request<{}, {}, StreamingMessageR
       })}\n\n`);
     }
 
-    console.log(`\nHero Streaming Response: ${fullResponse}`);
+    console.log(`\n${hero.name} Response: ${fullResponse}`);
 
     // Convert full response to speech
     const [ttsResponse] = await ttsClient.synthesizeSpeech({
       input: { text: fullResponse },
-      voice: { languageCode: 'en-US', ssmlGender: 'MALE' },
+      voice: { languageCode: 'en-US', name: hero.voiceName, ssmlGender: 'MALE' },
       audioConfig: { audioEncoding: 'MP3' },
     });
 
