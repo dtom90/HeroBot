@@ -12,7 +12,7 @@ export interface ConversationState {
   // Actions
   setIsLoading: (hero: ValidHero, isLoading: boolean) => void;
   addMessage: (hero: ValidHero, message: Message) => void;
-  upsertStreamingMessage: (hero: ValidHero, text: string) => void;
+  upsertHeroMessage: (hero: ValidHero, message: Message) => void;
   clearMessages: (hero: ValidHero) => void;
 }
 
@@ -51,13 +51,13 @@ export const useConversationStore = create<ConversationState>((set, get) => ({
     },
   })),
   
-  upsertStreamingMessage: (hero, text) => set((state) => {
+  upsertHeroMessage: (hero, message) => set((state) => {
     const heroState = state.heroStates[hero];
     const lastMessage = heroState.messages[heroState.messages.length - 1];
     
     if (lastMessage && lastMessage.type === 'hero') {
       // Update the last message if it's a hero type
-      const updatedMessage = { ...lastMessage, text: text };
+      const updatedMessage = { ...lastMessage, text: message.text, audio: message.audio };
       return {
         heroStates: {
           ...state.heroStates,
@@ -74,7 +74,7 @@ export const useConversationStore = create<ConversationState>((set, get) => ({
           ...state.heroStates,
           [hero]: {
             ...heroState,
-            messages: [...heroState.messages, { type: 'hero', text }],
+            messages: [...heroState.messages, message],
           },
         },
       };

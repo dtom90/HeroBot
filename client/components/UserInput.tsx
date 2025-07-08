@@ -3,16 +3,16 @@ import { View, TextInput, NativeSyntheticEvent, TextInputKeyPressEventData, Touc
 import { MaterialIcons } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useConversationStore } from '../lib/store';
-import { Audio } from 'expo-av';
 import { HERO_INFORMATION, Message, ValidHero } from '../../shared/types';
 import { transcriptionStreamQuery, streamingMessageQuery, queryClient } from '../lib/queryClient';
 import { useFocusEffect } from '@react-navigation/native';
+import { useAudio } from '../hooks/useAudio';
 
 export const UserInput = ({ hero }: { hero: ValidHero }) => {
-  const { addMessage, setIsLoading, upsertStreamingMessage } = useConversationStore();
+  const { addMessage, setIsLoading, upsertHeroMessage: upsertStreamingMessage } = useConversationStore();
   const [text, setText] = useState('');
   const [isRecording, setIsRecording] = useState(false);
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const { playAudio, stopAudio, cleanup: cleanupAudio } = useAudio();
   
   // Streamed query for WebSocket transcription
   const {
@@ -70,10 +70,11 @@ export const UserInput = ({ hero }: { hero: ValidHero }) => {
       if (lastStreamingData.type === 'chunk') {
         setIsLoading(hero, false);
         // Update the message with partial text
-        upsertStreamingMessage(hero, lastStreamingData.text || '');
+        upsertStreamingMessage(hero, { type: 'hero', text: lastStreamingData.text || '' } as Message);
       } else if (lastStreamingData.type === 'complete') {
         // Final message with audio
         console.log('Hero Response:', lastStreamingData.text);
+        upsertStreamingMessage(hero, { type: 'hero', text: lastStreamingData.text || '', audio: lastStreamingData.audio } as Message);
         
         // Play audio if available
         if (lastStreamingData.audio) {
@@ -112,10 +113,7 @@ export const UserInput = ({ hero }: { hero: ValidHero }) => {
     React.useCallback(() => {
       return () => {
         // Cleanup audio
-        console.log('Cleaning up audio on navigation away');
-        if (sound) {
-          sound.unloadAsync();
-        }
+        cleanupAudio();
         
         // Cancel any ongoing queries
         queryClient.cancelQueries({ queryKey: ['transcription'] });
@@ -124,26 +122,10 @@ export const UserInput = ({ hero }: { hero: ValidHero }) => {
         // Reset recording state
         setIsRecording(false);
       };
-    }, [sound])
+    }, [cleanupAudio])
   );
 
-  const playAudio = async (audioBase64: string) => {
-    try {
-      // Stop any currently playing sound
-      if (sound) {
-        await sound.unloadAsync();
-      }
 
-      // Create and play new sound
-      const { sound: newSound } = await Audio.Sound.createAsync(
-        { uri: `data:audio/mp3;base64,${audioBase64}` },
-        { shouldPlay: true }
-      );
-      setSound(newSound);
-    } catch (error) {
-      console.error('Error playing audio:', error);
-    }
-  };
 
   const submitUserMessage = async (textToSubmit?: string, isInitialMessage: boolean = false) => {
     if (!hero) {
@@ -179,9 +161,7 @@ export const UserInput = ({ hero }: { hero: ValidHero }) => {
   };
 
   const startRecording = async () => {
-    if (sound) {
-      await sound.unloadAsync();
-    }
+    await stopAudio();
     setIsRecording(true);
     setText('');
   };
