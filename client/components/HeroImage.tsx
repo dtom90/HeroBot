@@ -10,7 +10,7 @@ export const HeroImage = ({ hero }: { hero: ValidHero }) => {
   }
 
   if (HERO_ASSETS[hero].video) {
-    return <HeroAnimation hero={hero} />;
+    return <HeroAnimation hero={hero} style={{ width: '100%', height: '100%' }} />;
   } else {
     return (
       <View className='flex-1'>

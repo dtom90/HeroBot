@@ -23,7 +23,7 @@ export default function HeroPage({ hero }: { hero: ValidHero }) {
       <Container>
         <View className="flex-1">
           <View className="flex-1 w-full h-full overflow-y-auto flex flex-row">
-            <View style={{ flexShrink: 1, flexBasis: 'auto', maxWidth: '50%' }}>
+            <View style={{ flexShrink: 1, flexBasis: 'auto', maxWidth: '50%' }} className="pr-4 pb-4">
               <HeroImage hero={hero} />
             </View>
             <View className="flex-1">
