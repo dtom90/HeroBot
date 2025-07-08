@@ -2,10 +2,7 @@ import { create } from 'zustand';
 import { Message, VALID_HEROES, ValidHero } from '../../shared/types';
 
 export interface ConversationState {
-  // Global state
-  currentHero: ValidHero | null;
-  setCurrentHero: (hero: ValidHero | null) => void;
-  
+
   // Per-hero state
   heroStates: Record<ValidHero, {
     isLoading: boolean;
@@ -31,8 +28,6 @@ const initialHeroStates = VALID_HEROES.reduce((acc, hero) => {
 }, {} as Record<ValidHero, typeof initialHeroState>);
 
 export const useConversationStore = create<ConversationState>((set, get) => ({
-  currentHero: null,
-  setCurrentHero: (hero) => set({ currentHero: hero }),
   
   heroStates: initialHeroStates,
   

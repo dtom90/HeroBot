@@ -2,12 +2,13 @@ import { View, Text, ScrollView } from 'react-native';
 import { useConversationStore } from '../lib/store';
 import { useRef, useEffect } from 'react';
 import { Message } from './Message';
+import { ValidHero } from '../../shared/types';
 
-export const Conversation = () => {
-  const { currentHero, heroStates } = useConversationStore();
+export const Conversation = ({ hero }: { hero: ValidHero }) => {
+  const { heroStates } = useConversationStore();
   
   // Get the current hero's state, or use empty state if no hero is selected
-  const currentHeroState = currentHero ? heroStates[currentHero] : { messages: [], isLoading: false };
+  const currentHeroState = hero ? heroStates[hero] : { messages: [], isLoading: false };
   const { messages, isLoading } = currentHeroState;
   
   const scrollViewRef = useRef<ScrollView>(null);

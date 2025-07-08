@@ -4,11 +4,11 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useConversationStore } from '../lib/store';
 import { Audio } from 'expo-av';
-import { HERO_INFORMATION, Message } from '../../shared/types';
+import { HERO_INFORMATION, Message, ValidHero } from '../../shared/types';
 import { transcriptionStreamQuery, streamingMessageQuery, queryClient } from '../lib/queryClient';
 
-export const UserInput = () => {
-  const { currentHero, addMessage, setIsLoading, upsertStreamingMessage } = useConversationStore();
+export const UserInput = ({ hero }: { hero: ValidHero }) => {
+  const { addMessage, setIsLoading, upsertStreamingMessage } = useConversationStore();
   const [text, setText] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
@@ -56,20 +56,20 @@ export const UserInput = () => {
     data: streamingData,
     error: streamingError,
   } = useQuery({
-    queryKey: ['streamingMessage', currentHero, streamingMessage],
+    queryKey: ['streamingMessage', hero, streamingMessage],
     enabled: !!streamingMessage,
     queryFn: streamingMessageQuery,
   });
 
   // Handle streaming updates
   useEffect(() => {
-    if (streamingData && currentHero) {
+    if (streamingData && hero) {
       const lastStreamingData = streamingData[streamingData.length - 1];
       
       if (lastStreamingData.type === 'chunk') {
-        setIsLoading(currentHero, false);
+        setIsLoading(hero, false);
         // Update the message with partial text
-        upsertStreamingMessage(currentHero, lastStreamingData.text || '');
+        upsertStreamingMessage(hero, lastStreamingData.text || '');
       } else if (lastStreamingData.type === 'complete') {
         // Final message with audio
         console.log('Hero Response:', lastStreamingData.text);
@@ -79,28 +79,28 @@ export const UserInput = () => {
           playAudio(lastStreamingData.audio);
         }
         
-        setIsLoading(currentHero, false);
+        setIsLoading(hero, false);
         setStreamingMessage(null);
         // Reset the streaming query
         queryClient.removeQueries({ queryKey: ['streamingMessage'] });
       } else if (lastStreamingData.type === 'error') {
         console.error('Streaming error:', lastStreamingData.error);
-        setIsLoading(currentHero, false);
+        setIsLoading(hero, false);
         setStreamingMessage(null);
         queryClient.removeQueries({ queryKey: ['streamingMessage'] });
       }
     }
-  }, [streamingData, currentHero]);
+  }, [streamingData, hero]);
 
   // Handle streaming errors
   useEffect(() => {
-    if (streamingError && currentHero) {
+    if (streamingError && hero) {
       console.error('Streaming error:', streamingError);
-      setIsLoading(currentHero, false);
+      setIsLoading(hero, false);
       setStreamingMessage(null);
       queryClient.cancelQueries({ queryKey: ['streamingMessage'] });
     }
-  }, [streamingError, currentHero]);
+  }, [streamingError, hero]);
 
   const playAudio = async (audioBase64: string) => {
     try {
@@ -121,7 +121,7 @@ export const UserInput = () => {
   };
 
   const submitUserMessage = async (textToSubmit?: string) => {
-    if (!currentHero) {
+    if (!hero) {
       console.warn('No hero selected');
       return;
     }
@@ -129,9 +129,9 @@ export const UserInput = () => {
     const finalText = textToSubmit || text;
     console.log('User Input:', finalText);
     if (finalText.trim()) {
-      setIsLoading(currentHero, true);
+      setIsLoading(hero, true);
       const userMessage = { type: 'user', text: finalText } as Message;
-      addMessage(currentHero, userMessage);
+      addMessage(hero, userMessage);
       setText('');
       setStreamingMessage(userMessage); // Trigger streaming query
     }
@@ -172,11 +172,6 @@ export const UserInput = () => {
     }
   };
 
-  // Don't render if no hero is selected
-  if (!currentHero) {
-    return null;
-  }
-
   return (
     <View>
       {transcriptionError && (
@@ -200,7 +195,7 @@ export const UserInput = () => {
           onChangeText={setText}
           onKeyPress={handleKeyPress}
           returnKeyType="send"
-          placeholder={isRecording ? 'Recording...' : `Ask ${HERO_INFORMATION[currentHero].name} a question...`}
+          placeholder={isRecording ? 'Recording...' : `Ask ${HERO_INFORMATION[hero].name} a question...`}
           editable={!isRecording}
         />
         <TouchableOpacity

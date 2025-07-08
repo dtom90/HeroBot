@@ -1,6 +1,4 @@
-import { useEffect } from "react";
 import { HERO_INFORMATION, ValidHero } from "../../shared/types";
-import { useConversationStore } from "~/lib/store";
 import { Container } from "./Container";
 import { Header } from "./Header";
 import { View } from "react-native";
@@ -9,14 +7,6 @@ import { Conversation } from "./Conversation";
 import { UserInput } from "./UserInput";
 
 export default function HeroPage({ hero }: { hero: ValidHero }) {
-  const setCurrentHero = useConversationStore((state) => state.setCurrentHero);
-  
-  useEffect(() => {
-    if (hero) {
-      setCurrentHero(hero as ValidHero);
-    }
-  }, [hero, setCurrentHero]);
-
   return (
     <>
       <Header title={HERO_INFORMATION[hero].name} />
@@ -27,11 +17,11 @@ export default function HeroPage({ hero }: { hero: ValidHero }) {
               <HeroImage hero={hero} />
             </View>
             <View className="flex-1">
-              <Conversation />
+              <Conversation hero={hero} />
             </View>
           </View>
 
-          <UserInput />
+          <UserInput hero={hero} />
         </View>
       </Container>
     </>
