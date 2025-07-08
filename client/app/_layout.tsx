@@ -23,11 +23,12 @@ export default function RootLayout() {
               headerLeft: () => null
             }} 
           />
-          <Stack.Screen 
-            name="[hero]" 
-            options={{ 
-              headerShown: true 
-            }} 
+          <Stack.Screen
+            name="[hero]"
+            options={{
+              headerTitleAlign: 'center',
+              headerLeft: () => null
+            }}
           />
         </Stack>
       </GestureHandlerRootView>
