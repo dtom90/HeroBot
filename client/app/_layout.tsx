@@ -24,6 +24,9 @@ export default function RootLayout() {
               color: '#ffffff',
             },
             headerShadowVisible: false,
+            contentStyle: {
+              backgroundColor: '#111827',
+            },
           }}
         >
           <Stack.Screen 

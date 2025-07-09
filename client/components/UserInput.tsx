@@ -193,7 +193,7 @@ export const UserInput = ({ hero }: { hero: ValidHero }) => {
         <TextInput
           multiline
           numberOfLines={4}
-          className="border border-gray-300 dark:border-gray-600 rounded-lg p-4 min-h-[100px] bg-white dark:bg-gray-800 pr-12 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+          className="border border-gray-300 dark:border-gray-600 rounded-lg p-4 min-h-[100px] dark:bg-gray-800 pr-12 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
           value={text}
           onChangeText={setText}
           onKeyPress={handleKeyPress}

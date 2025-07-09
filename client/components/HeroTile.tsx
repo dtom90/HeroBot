@@ -20,7 +20,7 @@ export function HeroTile({ hero }: HeroTileProps) {
         onHoverOut={() => setIsHovering(false)}
       >
         <View 
-          className={`w-full h-45 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm transition-shadow duration-300 shadow-sm hover:shadow-xl dark:shadow-gray-900/50 dark:hover:shadow-gray-900/70`}
+          className={`w-full h-45 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm transition-shadow duration-300 shadow-sm hover:shadow-lg dark:shadow-gray-600/50 dark:hover:shadow-gray-600/70`}
         >
           <View className="flex flex-row h-full">
             <View className='mr-3 flex-shrink-0 relative'>
