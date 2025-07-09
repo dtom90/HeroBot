@@ -13,8 +13,19 @@ export const unstable_settings = {
 export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Stack>
+      <GestureHandlerRootView style={{ flex: 1 }} className="dark">
+        <Stack
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: '#1f2937',
+            },
+            headerTintColor: '#ffffff',
+            headerTitleStyle: {
+              color: '#ffffff',
+            },
+            headerShadowVisible: false,
+          }}
+        >
           <Stack.Screen 
             name="index" 
             options={{ 

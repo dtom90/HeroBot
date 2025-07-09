@@ -19,9 +19,9 @@ export default function HeroPageRoute() {
         }} />
         <Container>
           <View className="flex-1 justify-center items-center">
-            <Text className="text-lg font-semibold mb-2">Invalid Hero</Text>
-            <Text className="text-gray-600 text-center">
-              Please select a valid hero from the <Link href="/" className="text-blue-600">Home Page</Link>.
+            <Text className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Invalid Hero</Text>
+            <Text className="text-gray-600 dark:text-gray-400 text-center">
+              Please select a valid hero from the <Link href="/" className="text-gray-600 dark:text-gray-400">Home Page</Link>.
             </Text>
           </View>
         </Container>

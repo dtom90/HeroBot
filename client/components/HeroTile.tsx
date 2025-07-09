@@ -20,7 +20,7 @@ export function HeroTile({ hero }: HeroTileProps) {
         onHoverOut={() => setIsHovering(false)}
       >
         <View 
-          className={`w-full h-45 bg-white rounded-lg p-4 shadow-sm transition-shadow duration-300 shadow-sm hover:shadow-xl`}
+          className={`w-full h-45 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm transition-shadow duration-300 shadow-sm hover:shadow-xl dark:shadow-gray-900/50 dark:hover:shadow-gray-900/70`}
         >
           <View className="flex flex-row h-full">
             <View className='mr-3 flex-shrink-0 relative'>
@@ -36,13 +36,13 @@ export function HeroTile({ hero }: HeroTileProps) {
               )}
             </View>
             <View className="flex-1">
-              <Text className="text-xl font-bold text-gray-900 mb-1" numberOfLines={1}>
+              <Text className="text-xl font-bold text-gray-900 dark:text-white mb-1" numberOfLines={1}>
                 {heroConfig.name}
               </Text>
-              <Text className="text-base text-blue-600 font-semibold mb-2" numberOfLines={1}>
+              <Text className="text-base text-gray-600 dark:text-gray-400 font-semibold mb-2" numberOfLines={1}>
                 {heroConfig.title}
               </Text>
-              <Text className="text-sm text-gray-700 leading-relaxed" numberOfLines={4}>
+              <Text className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed" numberOfLines={4}>
                 {heroConfig.description}
               </Text>
             </View>

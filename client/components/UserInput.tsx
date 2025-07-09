@@ -178,22 +178,22 @@ export const UserInput = ({ hero }: { hero: ValidHero }) => {
   return (
     <View>
       {transcriptionError && (
-        <View className="m-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative flex-row" role="alert">
-          <Text className="font-bold text-red-700">Transcription Error: </Text>
-          <Text className="block sm:inline text-red-700">{transcriptionError.message}</Text>
+        <View className="m-4 bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-300 px-4 py-3 rounded relative flex-row" role="alert">
+          <Text className="font-bold text-red-700 dark:text-red-300">Transcription Error: </Text>
+          <Text className="block sm:inline text-red-700 dark:text-red-300">{transcriptionError.message}</Text>
         </View>
       )}
       {streamingError && (
-        <View className="m-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative flex-row" role="alert">
-          <Text className="font-bold text-red-700">Streaming Error: </Text>
-          <Text className="block sm:inline text-red-700">{streamingError.message}</Text>
+        <View className="m-4 bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-300 px-4 py-3 rounded relative flex-row" role="alert">
+          <Text className="font-bold text-red-700 dark:text-red-300">Streaming Error: </Text>
+          <Text className="block sm:inline text-red-700 dark:text-red-300">{streamingError.message}</Text>
         </View>
       )}
       <View className="relative">
         <TextInput
           multiline
           numberOfLines={4}
-          className="border border-gray-300 rounded-lg p-4 min-h-[100px] bg-white pr-12"
+          className="border border-gray-300 dark:border-gray-600 rounded-lg p-4 min-h-[100px] bg-white dark:bg-gray-800 pr-12 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
           value={text}
           onChangeText={setText}
           onKeyPress={handleKeyPress}
@@ -203,7 +203,7 @@ export const UserInput = ({ hero }: { hero: ValidHero }) => {
         />
         <TouchableOpacity
           onPress={handleButtonPress}
-          className="absolute right-6 bottom-6 bg-blue-500 rounded-full p-2"
+          className="absolute right-6 bottom-6 bg-gray-500 dark:bg-gray-600 rounded-full p-2"
         >
           <View className="w-6 h-6 items-center justify-center">
             {text.trim() && !isRecording ? (

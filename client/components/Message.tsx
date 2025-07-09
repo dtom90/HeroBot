@@ -2,7 +2,7 @@ import { View, Text } from 'react-native';
 import { Message as MessageType } from '../../shared/types';
 
 export const Message = ({ message }: { message: MessageType }) => {
-  const bgColor = message.type === 'user' ? 'bg-blue-500' : 'bg-[#563D13]';
+  const bgColor = message.type === 'user' ? 'bg-gray-500 dark:bg-gray-600' : 'bg-[#563D13] dark:bg-[#8B4513]';
   const margin = message.type === 'user' ? 'ml-16' : 'mr-16';
   
   return (

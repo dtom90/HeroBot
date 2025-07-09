@@ -15,12 +15,12 @@ export function Header({ title }: HeaderProps) {
         headerLeft: () => (
           <Link href="/" className="ml-4">
             <View className="flex-row items-center">
-              <Ionicons name="arrow-back" size={24} color="#1e293b" className="mr-2" />
-              <Text className="font-medium text-base">Heroes</Text>
+              <Ionicons name="arrow-back" size={24} color="white" className="mr-2 dark:text-white" />
+              <Text className="font-medium text-base text-gray-800 dark:text-white">Heroes</Text>
             </View>
           </Link>
         ),
-        headerShadowVisible: true,
+        headerShadowVisible: false,
       }} 
     />
   );

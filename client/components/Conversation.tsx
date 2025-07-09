@@ -25,8 +25,8 @@ export const Conversation = ({ hero }: { hero: ValidHero }) => {
         <Message key={index} message={message} />
       ))}
       {isLoading && (
-        <View className="flex-row mb-4 bg-gray-300 p-4 rounded-lg">
-          <Text>Loading...</Text>
+        <View className="flex-row mb-4 bg-gray-300 dark:bg-gray-700 p-4 rounded-lg">
+          <Text className="text-gray-800 dark:text-gray-200">Loading...</Text>
         </View>
       )}
     </ScrollView>
